@@ -53,6 +53,22 @@ spec:
   selector:
     app: summer-mc-info
 ---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ace-summer-minecraft-dynmap
+  namespace: ace-official
+  labels:
+    service: game
+spec:
+  ports:
+    - port: 8123
+      targetPort: 8123
+      protocol: TCP
+      name: dynmap
+  selector:
+    app: ace-summer-minecraft
+---
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
@@ -75,3 +91,28 @@ spec:
             backend:
               serviceName: summer-mc-info
               servicePort: 80
+---
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: dynmap-mc
+  labels:
+    service: web
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      more_set_headers "Content-Security-Policy: default-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self'; img-src 'self' data:; connect-src 'self'; font-src 'self' data:; base-uri 'none'; form-action 'self'; frame-ancestors 'none'; navigate-to https:; block-all-mixed-content";
+spec:
+  tls:
+    - hosts:
+        - dynmap.uf-ace.com
+      secretName: dynmap-mc-tls
+  rules:
+    - host: dynmap.uf-ace.com
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: ace-summer-minecraft-dynmap
+              servicePort: 8123
