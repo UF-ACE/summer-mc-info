@@ -4,7 +4,13 @@
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
-    "bootstrap": "^4.4.1",
-    "jquery": "^3.5.1"
+    "bootstrap": "^4.4.1"
+  },
+  "scripts": {
+    "build": "postcss main.css > main.min.css"
+  },
+  "devDependencies": {
+    "cssnano": "^4.1.10",
+    "postcss-cli": "^7.1.1"
   }
 }

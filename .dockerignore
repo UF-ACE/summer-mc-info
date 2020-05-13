@@ -3,5 +3,6 @@
 !index.html
 !main.css
 !nginx.conf
+!postcss.config.js
 !package.json
 !yarn.lock
