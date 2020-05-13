@@ -12,3 +12,4 @@ ADD . .
 FROM nginx:1.18-alpine
 
 COPY --from=builder /app/ /usr/share/nginx/html/
+ADD nginx.conf /etc/nginx/nginx.conf

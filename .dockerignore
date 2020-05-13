@@ -1,0 +1,7 @@
+*
+!assets/
+!index.html
+!main.css
+!nginx.conf
+!package.json
+!yarn.lock

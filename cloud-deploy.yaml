@@ -1,0 +1,77 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: summer-mc-info
+  labels:
+    app: summer-mc-info
+    service: web
+spec:
+  replicas: 2
+  revisionHistoryLimit: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+  selector:
+    matchLabels:
+      app: summer-mc-info
+  template:
+    metadata:
+      labels:
+        app: summer-mc-info
+        service: web
+    spec:
+      containers:
+        - name: summer-mc-info
+          image: quay.io/uface/summer-mc-info:1.1
+          ports:
+            - containerPort: 80
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 80
+            initialDelaySeconds: 3
+            periodSeconds: 3
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/usr/sbin/nginx","-s","quit"]
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: summer-mc-info
+  labels:
+    service: web
+spec:
+  ports:
+    - port: 80
+      targetPort: 80
+      protocol: TCP
+      name: http
+  selector:
+    app: summer-mc-info
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: summer-mc-info
+  labels:
+    service: web
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+spec:
+  tls:
+    - hosts:
+        - mc.uf-ace.com
+      secretName: summer-mc-info-tls
+  rules:
+    - host: mc.uf-ace.com
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: summer-mc-info
+              servicePort: 80
