@@ -3,14 +3,14 @@
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
-  "dependencies": {
-    "bootstrap": "^4.4.1"
-  },
   "scripts": {
-    "build": "postcss main.css > main.min.css"
+    "build:css": "postcss main.css > main.min.css",
+    "build:html": "html-minifier --collapse-whitespace --remove-comments --remove-optional-tags --remove-script-type-attributes --remove-tag-whitespace --use-short-doctype -o index.min.html index.html"
   },
   "devDependencies": {
     "cssnano": "^4.1.10",
+    "cssnano-preset-advanced": "^4.0.7",
+    "html-minifier": "^4.0.0",
     "postcss-cli": "^7.1.1"
   }
 }
