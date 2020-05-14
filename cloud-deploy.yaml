@@ -23,7 +23,7 @@ spec:
     spec:
       containers:
         - name: summer-mc-info
-          image: quay.io/uface/summer-mc-info:2.0
+          image: quay.io/uface/summer-mc-info:2.1
           ports:
             - containerPort: 80
               protocol: TCP
